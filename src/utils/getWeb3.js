@@ -1,11 +1,14 @@
 import Web3 from 'web3'
 import provider from './providers'
+import { useContext, useState, useEffect } from 'react'
+import { types } from '../context/reducers'
+import { StoreContext } from '../context/StoreContext'
 
 const getProvider = () => {
   return provider[process.env.REACT_APP_ETH_NETWORK_TYPE]
 }
 
-const getWeb3 = () =>
+export const getWeb3 = () =>
   new Promise((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async () => {
@@ -35,4 +38,29 @@ const getWeb3 = () =>
     })
   })
 
-export default getWeb3
+export function useWeb3() {
+  const { state, dispatch, actions } = useContext(StoreContext)
+  async function asyncWeb3() {
+    try {
+      const web3 = await getWeb3()
+      dispatch({ type: types.WEB3_INITIALIZED, payload: web3 })
+
+      web3.eth.getBlockNumber(function(error, result) {
+        if (!error) console.log('block number')
+        console.log(web3.eth.blockNumber)
+        dispatch({ type: types.INIT_BLOCK_NUMBER, payload: result })
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    asyncWeb3()
+  }, [])
+}
+
+export function unsubscribeWeb3(subscription) {
+  subscription.unsubscribe(function(error, success) {
+    if (success) console.log('Successfully unsubscribed!')
+  })
+}
