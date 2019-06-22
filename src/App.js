@@ -37,10 +37,16 @@ function App() {
           .subscribe('newBlockHeaders')
           .on('data', function(blockHeader) {
             console.log(blockHeader)
-            setBlockList(prev => {
-              let ret = prev.slice(0, 9)
-              ret.unshift(blockHeader)
-              return ret
+
+            state.web3.eth.getBlock(blockHeader.number, function(
+              error,
+              result
+            ) {
+              setBlockList(prev => {
+                let ret = prev.slice(0, 9)
+                ret.unshift(result)
+                return ret
+              })
             })
           })
         return () => {
