@@ -9,7 +9,9 @@ import Blocks from './components/blocks/Blocks'
 
 function App() {
   const { state, dispatch, actions } = useContext(StoreContext)
+
   useWeb3(() => {}, [])
+
   let [blockList, setBlockList] = useState([])
   let [dataFetched, setDataFetched] = useState(false)
 
@@ -32,20 +34,12 @@ function App() {
       let subscription
       if (state.web3) {
         subscription = state.web3.eth
-          .subscribe('newBlockHeaders', (error, result) => {})
-          .on('data', async function(blockHeader) {
+          .subscribe('newBlockHeaders')
+          .on('data', function(blockHeader) {
             console.log(blockHeader)
             setBlockList(prev => {
-              state.web3.eth.getBlock(blockHeader.number, function(
-                error,
-                result
-              ) {
-                if (!error) {
-                  let ret = prev.slice(0, 9)
-                  ret.unshift(result)
-                }
-              })
-
+              let ret = prev.slice(0, 9)
+              ret.unshift(blockHeader)
               return ret
             })
           })
