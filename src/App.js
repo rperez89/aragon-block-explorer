@@ -10,6 +10,66 @@ import Blocks from './components/blocks/Blocks'
 function App() {
   const { state, dispatch, actions } = useContext(StoreContext)
   useWeb3(() => {}, [])
+  let [blockList, setBlockList] = useState([])
+  let [dataFetched, setDataFetched] = useState(false)
+
+  useEffect(() => {
+    if (state.blockNumber) {
+      let ret = []
+      async function getBlocks() {
+        for (let i = 0; i < 10; i++) {
+          let block = await state.web3.eth.getBlock(state.blockNumber - i)
+          setBlockList(blockList => [...blockList, block])
+        }
+      }
+      getBlocks()
+      setDataFetched(true)
+    }
+  }, [state.blockNumber])
+
+  useEffect(() => {
+    if (dataFetched) {
+      let subscription
+      if (state.web3) {
+        subscription = state.web3.eth
+          .subscribe('newBlockHeaders', (error, result) => {})
+          .on('data', async function(blockHeader) {
+            console.log(blockHeader)
+            setBlockList(prev => {
+              state.web3.eth.getBlock(blockHeader.number, function(
+                error,
+                result
+              ) {
+                if (!error) {
+                  let ret = prev.slice(0, 9)
+                  ret.unshift(result)
+                }
+              })
+
+              return ret
+            })
+          })
+        return () => {
+          subscription.unsubscribe(function(error, success) {
+            if (success) console.log('Successfully unsubscribed!')
+          })
+        }
+      }
+    }
+  }, [dataFetched])
+
+  const removeLastOne = list => {
+    console.log('INSIDE')
+    console.log('lenght before: ' + list.length)
+    if (list.length > 10) {
+      let ret = list.reverse()
+      ret.pop()
+      console.log('lenght before: ' + ret.length)
+      setBlockList(ret)
+    }
+  }
+
+  console.log('length ', blockList)
   return (
     <Main>
       <AppView title="Block Explorer">
@@ -20,7 +80,7 @@ function App() {
             return (
               <Container>
                 <div>
-                  <Blocks></Blocks>
+                  {dataFetched && <Blocks blockList={blockList}></Blocks>}
                 </div>
 
                 <div>#right content in there</div>
@@ -35,7 +95,6 @@ function App() {
 
 const Container = styled.div`
   width: 100%;
-  background: linear-gradient(130deg, rgb(0, 180, 230), rgb(0, 240, 224));
   ${breakpoint(
     'medium',
     `

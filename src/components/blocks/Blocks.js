@@ -13,59 +13,7 @@ import BlockRow from './BlockRow'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import './styles.css'
 
-const Blocks = () => {
-  const { state, dispatch, actions } = useContext(StoreContext)
-  let [blockList, setBlockList] = useState([])
-  let subscription
-
-  useEffect(() => {
-    if (state.blockNumber) {
-      console.log('BLOCKNUMBER ', state.blockNumber)
-      let ret = []
-      async function getBlocks() {
-        for (let i = 0; i < 10; i++) {
-          let block = await state.web3.eth.getBlock(state.blockNumber - i)
-          setBlockList(prevBlockList => [...prevBlockList, block])
-        }
-      }
-      getBlocks()
-    }
-  }, [state.blockNumber])
-
-  console.log('BLOCKLIST2', blockList)
-  // useEffect(() => {
-  //   if (state.web3) {
-  //     subscription = state.web3.eth.subscribe(
-  //       'newBlockHeaders',
-  //       (error, result) => {
-  //         if (!error)
-  //           setBlockList(blockList => addNewBlock(blockList, result.number))
-  //       }
-  //     )
-  //     return () => {
-  //       subscription.unsubscribe(function(error, success) {
-  //         if (success) console.log('Successfully unsubscribed!')
-  //       })
-  //     }
-  //   }
-  // }, [state.web3])
-
-  // const addNewBlock = (blockList, block) => {
-  //   let ret = blockList.slice()
-  //   state.web3.eth.getBlock(block, false, (error, result) => {
-  //     if (!error) ret.unshift(result)
-  //   })
-
-  //   if (ret.length == 11) {
-  //     ret.pop()
-  //   }
-  //   return ret
-  // }
-
-  if (!state.web3) {
-    return <div>Loading Web3, accounts, and contract...</div>
-  }
-
+const Blocks = React.memo(({ blockList }) => {
   return (
     <Table
       header={
@@ -82,15 +30,16 @@ const Blocks = () => {
         margin-bottom: 20px;
       `}
     >
-      <TransitionGroup className="todo-list">
+      <TransitionGroup className="todo-list" exit={false}>
         {blockList &&
-          blockList.map(block => (
+          blockList.map((block, index) => (
+            // const { number, timestamp } = block //destructuring
             <CSSTransition key={block.hash} timeout={300} classNames="item">
               <BlockRow block={block} key={block.hash} />
             </CSSTransition>
           ))}
-      </TransitionGroup>
+      </TransitionGroup>{' '}
     </Table>
   )
-}
+})
 export default Blocks

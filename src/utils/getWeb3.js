@@ -46,9 +46,7 @@ export function useWeb3() {
       dispatch({ type: types.WEB3_INITIALIZED, payload: web3 })
 
       web3.eth.getBlockNumber(function(error, result) {
-        if (!error) console.log('block number')
-        console.log(web3.eth.blockNumber)
-        dispatch({ type: types.INIT_BLOCK_NUMBER, payload: result })
+        if (!error) dispatch({ type: types.INIT_BLOCK_NUMBER, payload: result })
       })
     } catch (error) {
       console.log(error)

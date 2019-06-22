@@ -7,7 +7,7 @@ const initialState = {
 const types = {
   WEB3_INITIALIZED: 'WEB3_INITIALIZED',
   WEB3_SUBSCRIBED: 'WEB3_SUBSCRIBED',
-  INIT_BLOCK_NUMBER: 'INIT_BLOCK_ARRAY',
+  INIT_BLOCK_NUMBER: 'INIT_BLOCK_NUMBER',
 }
 
 const initBlocks = (blockNumber, web3) => {
