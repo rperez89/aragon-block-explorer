@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { StoreContext } from './context/StoreContext'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { types } from './context/reducers'
 import { Main, AppView, breakpoint, Viewport } from '@aragon/ui'
 import './App.css'
 import { useWeb3, unsubscribeWeb3 } from './utils/getWeb3'
 import Blocks from './components/blocks/Blocks'
+import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner'
 
 function App() {
   const { state, dispatch, actions } = useContext(StoreContext)
@@ -36,12 +37,11 @@ function App() {
         subscription = state.web3.eth
           .subscribe('newBlockHeaders')
           .on('data', function(blockHeader) {
-            console.log(blockHeader)
-
             state.web3.eth.getBlock(blockHeader.number, function(
               error,
               result
             ) {
+              console.log(result)
               setBlockList(prev => {
                 let ret = prev.slice(0, 9)
                 ret.unshift(result)
@@ -58,18 +58,7 @@ function App() {
     }
   }, [dataFetched])
 
-  const removeLastOne = list => {
-    console.log('INSIDE')
-    console.log('lenght before: ' + list.length)
-    if (list.length > 10) {
-      let ret = list.reverse()
-      ret.pop()
-      console.log('lenght before: ' + ret.length)
-      setBlockList(ret)
-    }
-  }
-
-  console.log('length ', blockList)
+  console.log('datafetched', dataFetched)
   return (
     <Main>
       <AppView title="Block Explorer">
@@ -77,12 +66,19 @@ function App() {
           {({ below }) => {
             const tabbedNavigation = below('medium')
             const compactTable = below('medium')
+            if (!dataFetched) {
+              return (
+                <SpinnerContainer>
+                  <LoadingSpinner />
+                </SpinnerContainer>
+              )
+            }
             return (
               <Container>
-                <div>
+                <Left>
                   {dataFetched && <Blocks blockList={blockList}></Blocks>}
-                </div>
-
+                </Left>
+                <Separator />
                 <div>#right content in there</div>
               </Container>
             )
@@ -102,7 +98,18 @@ const Container = styled.div`
     `
   )}
 `
-
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+`
+const Left = styled.div`
+  width: 48%;
+`
+const Separator = styled.div`
+  width: 2%;
+`
 const Table1Wrapper = styled.div`
   flex-shrink: 0;
   flex-grow: 0;

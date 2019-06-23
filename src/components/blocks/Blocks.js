@@ -10,36 +10,49 @@ import {
   theme,
 } from '@aragon/ui'
 import BlockRow from './BlockRow'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import {
+  CSSTransition,
+  TransitionGroup,
+  Transition,
+} from 'react-transition-group'
 import './styles.css'
+import styled from 'styled-components'
 
 const Blocks = React.memo(({ blockList }) => {
   return (
-    <Table
-      header={
-        <TableRow>
-          <TableHeader title="Date" css="width: 12%" />
-          <TableHeader title="Source / Recipient" css="width: 40%" />
-          <TableHeader title="Reference" css="width: 100%" />
-          <TableHeader title="Amount" align="right" css="width: 0" />
-          <TableHeader />
-        </TableRow>
-      }
-      css={`
-        color: ${theme.textPrimary};
-        margin-bottom: 20px;
-      `}
-    >
-      <TransitionGroup className="todo-list" exit={false}>
+    <div>
+      <Table
+        header={
+          <TableRow>
+            <TableHeader title="Number" css="width: 25%" />
+            <TableHeader title="Transactions" css="width: 25%" />
+            <TableHeader title="Time ago" css="width: 25%" />
+            <TableHeader title="Miner" css="width: 25%" />
+          </TableRow>
+        }
+        css={`
+          color: ${theme.textPrimary};
+          margin-bottom: 20px;
+        `}
+      >
+        {/* <TransitionGroup exit={false}> */}
         {blockList &&
           blockList.map((block, index) => (
             // const { number, timestamp } = block //destructuring
-            <CSSTransition key={block.hash} timeout={300} classNames="item">
-              <BlockRow block={block} key={block.hash} />
-            </CSSTransition>
+            // <CSSTransition key={block.hash} timeout={300} classNames="item">
+
+            <BlockRow block={block} key={block.hash} />
+
+            // </CSSTransition>
           ))}
-      </TransitionGroup>{' '}
-    </Table>
+        {/* </TransitionGroup> */}
+      </Table>
+    </div>
   )
 })
 export default Blocks
+
+export const Fade2 = styled(BlockRow)`
+  transition: 5s;
+  opacity: ${({ state }) => (state === true ? 1 : 0)};
+`
