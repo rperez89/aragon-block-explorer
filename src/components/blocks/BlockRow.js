@@ -1,21 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { StoreContext } from '../../context/StoreContext'
 import { types } from '../../context/reducers'
-import {
-  Button,
-  Table,
-  TableHeader,
-  TableRow,
-  TableCell,
-  Text,
-  useViewport,
-  theme,
-  Timer,
-  IdentityBadge,
-} from '@aragon/ui'
-import useInterval from '../../utils/useInterval'
+import { TableRow, TableCell, Text, Timer, IdentityBadge } from '@aragon/ui'
 
 const BlockRow = ({ block }) => {
+  const { state, dispatch, actions } = useContext(StoreContext)
   let [timeStamp, setTimeStamp] = useState()
   const { number, transactions, timestamp, miner } = block
 
@@ -23,12 +12,12 @@ const BlockRow = ({ block }) => {
     setTimeStamp(timeStamp => new Date(timestamp * 1000))
   }, [])
 
-  // useInterval(() => {
-  //   setTimeStamp(timestamp => Math.round(+new Date() / 1000) - block.timestamp)
-  // }, 2000)
-
   return (
-    <TableRow>
+    <TableRow
+      onClick={() => {
+        dispatch({ type: types.SELECT_BLOCK, payload: block.number })
+      }}
+    >
       <TableCell>
         <Text>{number}</Text>
       </TableCell>
@@ -40,11 +29,8 @@ const BlockRow = ({ block }) => {
           <Timer start={timeStamp} showEmpty={false} />
         </Text>
       </TableCell>
-      {/* <TableCell>
-        <Text>{miner}</Text>
-      </TableCell> */}
       <TableCell>
-        <IdentityBadge entity={miner} badgeOnly={true} />
+        <IdentityBadge entity={miner} />
       </TableCell>
     </TableRow>
   )

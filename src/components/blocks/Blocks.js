@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { StoreContext } from '../../context/StoreContext'
 import { types } from '../../context/reducers'
 import {
@@ -19,35 +19,39 @@ import './styles.css'
 import styled from 'styled-components'
 
 const Blocks = React.memo(({ blockList }) => {
+  const { state, dispatch, actions } = useContext(StoreContext)
+
   return (
-    <div>
-      <Table
-        header={
-          <TableRow>
-            <TableHeader title="Number" css="width: 25%" />
-            <TableHeader title="Transactions" css="width: 25%" />
-            <TableHeader title="Time ago" css="width: 25%" />
-            <TableHeader title="Miner" css="width: 25%" />
-          </TableRow>
-        }
-        css={`
-          color: ${theme.textPrimary};
-          margin-bottom: 20px;
-        `}
-      >
-        {/* <TransitionGroup exit={false}> */}
-        {blockList &&
-          blockList.map((block, index) => (
-            // const { number, timestamp } = block //destructuring
-            // <CSSTransition key={block.hash} timeout={300} classNames="item">
+    <Table
+      header={
+        <TableRow>
+          <TableHeader title="Number" css="width: 25%" />
+          <TableHeader title="Transactions" css="width: 25%" />
+          <TableHeader title="Time ago" css="width: 25%" />
+          <TableHeader title="Miner" css="width: 25%" />
+        </TableRow>
+      }
+      css={`
+        color: ${theme.textPrimary};
+        margin-bottom: 20px;
+      `}
+    >
+      {/* <TransitionGroup exit={false}> */}
+      {blockList &&
+        blockList.map((block, index) => (
+          // const { number, timestamp } = block //destructuring
+          // <CSSTransition key={block.hash} timeout={300} classNames="item">
 
-            <BlockRow block={block} key={block.hash} />
+          <BlockRow
+            block={block}
+            key={block.hash}
+            //dispatch({ type: types.SELECT_BLOCK, payload: block.number })
+          />
 
-            // </CSSTransition>
-          ))}
-        {/* </TransitionGroup> */}
-      </Table>
-    </div>
+          // </CSSTransition>
+        ))}
+      {/* </TransitionGroup> */}
+    </Table>
   )
 })
 export default Blocks

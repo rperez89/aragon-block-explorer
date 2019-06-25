@@ -2,12 +2,14 @@ const initialState = {
   web3: '',
   web3Subscription: '',
   blockNumber: '',
+  selectedBlock: '',
 }
 
 const types = {
   WEB3_INITIALIZED: 'WEB3_INITIALIZED',
   WEB3_SUBSCRIBED: 'WEB3_SUBSCRIBED',
   INIT_BLOCK_NUMBER: 'INIT_BLOCK_NUMBER',
+  SELECT_BLOCK: 'SELECT_BLOCK',
 }
 
 const initBlocks = (blockNumber, web3) => {
@@ -37,6 +39,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         blockNumber: action.payload,
+      }
+    case types.SELECT_BLOCK:
+      return {
+        ...state,
+        selectedBlock: action.payload,
       }
     default:
       throw new Error('Unexpected action')

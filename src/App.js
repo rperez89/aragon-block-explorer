@@ -6,6 +6,7 @@ import { Main, AppView, breakpoint, Viewport } from '@aragon/ui'
 import './App.css'
 import { useWeb3, unsubscribeWeb3 } from './utils/getWeb3'
 import Blocks from './components/blocks/Blocks'
+import Transactions from './components/transactions/Transactions'
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner'
 
 function App() {
@@ -26,9 +27,14 @@ function App() {
         }
       }
       getBlocks()
-      setDataFetched(true)
     }
   }, [state.blockNumber])
+
+  useEffect(() => {
+    if (blockList.length == 10) {
+      setDataFetched(true)
+    }
+  }, [blockList])
 
   useEffect(() => {
     if (dataFetched) {
@@ -58,7 +64,7 @@ function App() {
     }
   }, [dataFetched])
 
-  console.log('datafetched', dataFetched)
+  console.log('SELECTED ', state.selectedBlock)
   return (
     <Main>
       <AppView title="Block Explorer">
@@ -66,6 +72,7 @@ function App() {
           {({ below }) => {
             const tabbedNavigation = below('medium')
             const compactTable = below('medium')
+            console.log('compactTable', compactTable)
             if (!dataFetched) {
               return (
                 <SpinnerContainer>
@@ -74,12 +81,17 @@ function App() {
               )
             }
             return (
-              <Container>
+              <Container id={'container'}>
                 <Left>
                   {dataFetched && <Blocks blockList={blockList}></Blocks>}
                 </Left>
                 <Separator />
-                <div>#right content in there</div>
+
+                <Right>
+                  <Transactions
+                    blockNumber={state.selectedBlock}
+                  ></Transactions>
+                </Right>
               </Container>
             )
           }}
@@ -90,13 +102,15 @@ function App() {
 }
 
 const Container = styled.div`
-  width: 100%;
+  display: flex;
+  flex-direction: column;
   ${breakpoint(
-    'medium',
+    'large',
     `
       display: flex;
+      flex-direction: row
     `
-  )}
+  )};
 `
 const SpinnerContainer = styled.div`
   display: flex;
@@ -105,10 +119,17 @@ const SpinnerContainer = styled.div`
   height: 50vh;
 `
 const Left = styled.div`
-  width: 48%;
+  width: 45%;
+  @media (max-width: 1170px) {
+    width: 100%;
+  }
+`
+
+const Right = styled.div`
+  width: 45vw;
 `
 const Separator = styled.div`
-  width: 2%;
+  width: 5vw;
 `
 const Table1Wrapper = styled.div`
   flex-shrink: 0;
