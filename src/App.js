@@ -87,11 +87,7 @@ function App() {
                 </Left>
                 <Separator />
 
-                <Right>
-                  <Transactions
-                    blockNumber={state.selectedBlock}
-                  ></Transactions>
-                </Right>
+                <Transactions blockNumber={state.selectedBlock}></Transactions>
               </Container>
             )
           }}
@@ -123,10 +119,6 @@ const Left = styled.div`
   @media (max-width: 1170px) {
     width: 100%;
   }
-`
-
-const Right = styled.div`
-  width: 45vw;
 `
 const Separator = styled.div`
   width: 5vw;
