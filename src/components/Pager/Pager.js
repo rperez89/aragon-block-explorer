@@ -1,7 +1,23 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 
-const Pager = React.memo(({ onNext }) => {
+const Pager = React.memo(({ onNext, onPrevious, totalPages, currentPage }) => {
+  let [previousBlocked, setPreviousBlocked] = useState(false)
+  let [nextBlocked, setNextBlocked] = useState(false)
+
+  useEffect(() => {
+    setNextBlocked(nxt => false)
+    setPreviousBlocked(prv => false)
+    if (currentPage == 1) {
+      setPreviousBlocked(prev => true)
+    }
+    if (currentPage == totalPages) {
+      console.log('totaaaaaaal')
+      setNextBlocked(nxt => true)
+    }
+  }, [currentPage, totalPages])
+
+  console.log('nextBlocked ', nextBlocked)
   return (
     <>
       <List>
@@ -9,13 +25,23 @@ const Pager = React.memo(({ onNext }) => {
           <Text>{'First'}</Text>
         </Item>
         <Item>
-          <Text>{'<'}</Text>
+          <Previous
+            onClick={currentPage > 1 ? onPrevious : undefined}
+            disabled={previousBlocked}
+          >
+            {'<'}
+          </Previous>
         </Item>
         <Item>
-          <Text>{'Page'}</Text>
+          <Pages>{`Page ${currentPage} of ${totalPages}`}</Pages>
         </Item>
         <Item>
-          <Text onClick={onNext}>{'>'}</Text>
+          <Next
+            onClick={currentPage < totalPages ? onNext : undefined}
+            disabled={nextBlocked}
+          >
+            {'>'}
+          </Next>
         </Item>
         <Item>
           <Text>{'Last'}</Text>
@@ -44,6 +70,49 @@ const Text = styled.a`
   padding: 0 14px;
   text-decoration: none;
   border: 1px solid #ddd;
+  border-radius: 9px;
+  background: rgb(220, 234, 239);
+  color: rgb(112, 112, 112);
+  &:hover {
+    background-color: ${({ disabled }) => !disabled && '#3498db'};
+    color: ${({ disabled }) => !disabled && 'white'};
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  }
+`
+const Next = styled.a`
+  float: left;
+  padding: 0 14px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  background: rgb(220, 234, 239);
+  color: rgb(112, 112, 112);
+  &:hover {
+    background-color: ${({ disabled }) => !disabled && '#3498db'};
+    color: ${({ disabled }) => !disabled && 'white'};
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  }
+`
+const Previous = styled.a`
+  float: left;
+  padding: 0 14px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  background: rgb(220, 234, 239);
+  color: rgb(112, 112, 112);
+  &:hover {
+    background-color: ${({ disabled }) => !disabled && '#3498db'};
+    color: ${({ disabled }) => !disabled && 'white'};
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  }
+`
+const Pages = styled.a`
+  float: left;
+  padding: 0 14px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 9px;
   background: rgb(220, 234, 239);
   color: rgb(112, 112, 112);
 `

@@ -21,6 +21,9 @@ import styled from 'styled-components'
 const Blocks = React.memo(({ blockList }) => {
   const { state, dispatch, actions } = useContext(StoreContext)
   const { contentBorder } = theme
+  const { below } = useViewport()
+  const compactMode = below('medium')
+  console.log('belowwww ', compactMode)
   return (
     <>
       <TitleContainer contentBorder={contentBorder}>
@@ -28,13 +31,16 @@ const Blocks = React.memo(({ blockList }) => {
       </TitleContainer>
       <Table
         // style={{ borderTop: `1px solid ${contentBorder}` }}
+        compactMode={compactMode}
         header={
-          <TableRow>
-            <TableHeader title="Number" css="width: 25%" />
-            <TableHeader title="Transactions" css="width: 25%" />
-            <TableHeader title="Time ago" css="width: 25%" />
-            <TableHeader title="Miner" css="width: 25%" />
-          </TableRow>
+          !compactMode && (
+            <TableRow>
+              <TableHeader title="Number" css="width: 25%" />
+              <TableHeader title="Transactions" css="width: 25%" />
+              <TableHeader title="Time ago" css="width: 25%" />
+              <TableHeader title="Miner" css="width: 25%" />
+            </TableRow>
+          )
         }
         css={`
           color: ${theme.textPrimary};
@@ -50,6 +56,7 @@ const Blocks = React.memo(({ blockList }) => {
             <BlockRow
               block={block}
               key={block.hash}
+              smallViewMode={compactMode}
               //dispatch({ type: types.SELECT_BLOCK, payload: block.number })
             />
 

@@ -1,6 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { StoreContext } from '../../context/StoreContext'
-import { types } from '../../context/reducers'
 import {
   Button,
   Table,
@@ -9,22 +8,18 @@ import {
   useViewport,
   theme,
 } from '@aragon/ui'
-//import BlockRow from './BlockRow'
-import {
-  CSSTransition,
-  TransitionGroup,
-  Transition,
-} from 'react-transition-group'
-//import './styles.css'
 import TransactionRow from './TransactionRow'
-import ReactPaginate from 'react-paginate'
 import styled from 'styled-components'
 import './styles.css'
 import Pager from '../Pager/Pager'
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 
 const Transactions = React.memo(({ blockNumber }) => {
   const { state, dispatch, actions } = useContext(StoreContext)
+  let [dataFetched, setDataFetched] = useState(false)
   let [transactions, setTransactions] = useState([])
+  let [pagesNumber, setPagesNumber] = useState()
+  let [currentPage, setCurrentPage] = useState(1)
   //let [dataFetched, setDataFetched] = useState(false)
   const { contentBorder } = theme
 
@@ -33,72 +28,73 @@ const Transactions = React.memo(({ blockNumber }) => {
       let ret = []
       async function getBlocks() {
         let { transactions } = await state.web3.eth.getBlock(blockNumber, true)
-        console.log('traaan', transactions)
-        console.log('tran length ', transactions.length)
         let filteredTransactions = transactions.filter(({ value }) => value > 0)
         setTransactions(prev => filteredTransactions)
-        //setTransactions(blockList => [...blockList, block])
+        setPagesNumber(number => Math.ceil(filteredTransactions.length / 10))
       }
       getBlocks()
     }
   }, [blockNumber])
 
-  const handleOnNext = () => {
-    console.log('Next')
-  }
+  useEffect(() => {
+    if (pagesNumber > 0) {
+      setDataFetched(true)
+    }
+  }, [pagesNumber])
+
+  const handleOnNext = useCallback(() => {
+    setCurrentPage(page => page + 1)
+  }, [pagesNumber])
+
+  const handleOnPrevious = useCallback(() => {
+    setCurrentPage(page => page - 1)
+  }, [pagesNumber])
 
   return blockNumber ? (
     <>
-      <Right>
-        <TitleContainer contentBorder={contentBorder}>
-          <Title>{'Transactions From Block: '}</Title>
-        </TitleContainer>
-        <Table
-          header={
-            <TableRow>
-              <TableHeader title="Hash" css="width: 20%" />
-              <TableHeader title="From" css="width: 20%" />
-              <TableHeader title="To" css="width: 20%" />
-              <TableHeader title="Value" css="width: 20%" />
-            </TableRow>
-          }
-          css={`
-            color: ${theme.textPrimary};
-            margin-bottom: 20px;
-          `}
-        >
-          {/* <TransitionGroup exit={false}> */}
-          {transactions &&
-            transactions.slice(0, 10).map((trx, index) => (
-              // const { number, timestamp } = block //destructuring
-              // <CSSTransition key={block.hash} timeout={300} classNames="item">
-
-              <TransactionRow transaction={trx} key={trx.hash} />
-
-              // </CSSTransition>
-            ))}
-          {/* </TransitionGroup> */}
-        </Table>
-        <Footer contentBorder={contentBorder}>
-          {/* <ReactPaginate
-            previousLabel={'previous'}
-            nextLabel={'next'}
-            breakLabel={'...'}
-            breakClassName={'break-me'}
-            pageCount={2}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={() => {}}
-            containerClassName={'pagination'}
-            subContainerClassName={'pages pagination'}
-            activeClassName={'active'}
-          /> */}
-          <Pager onNext={handleOnNext}></Pager>
-        </Footer>
-      </Right>
+      {dataFetched ? (
+        <Right>
+          <TitleContainer contentBorder={contentBorder}>
+            <Title>{`Transactions From Block: ${blockNumber}`}</Title>
+          </TitleContainer>
+          <Table
+            header={
+              <TableRow>
+                <TableHeader title="Hash" css="width: 20%" />
+                <TableHeader title="From" css="width: 20%" />
+                <TableHeader title="To" css="width: 20%" />
+                <TableHeader title="Value (Eth)" css="width: 20%" />
+              </TableRow>
+            }
+            css={`
+              color: ${theme.textPrimary};
+              margin-bottom: 20px;
+            `}
+          >
+            {transactions &&
+              transactions
+                .slice(currentPage * 10 - 10, currentPage * 10)
+                .map((trx, index) => (
+                  <TransactionRow transaction={trx} key={trx.hash} />
+                ))}
+          </Table>
+          <Footer contentBorder={contentBorder}>
+            <Pager
+              onNext={handleOnNext}
+              onPrevious={handleOnPrevious}
+              totalPages={pagesNumber}
+              currentPage={currentPage}
+            ></Pager>
+          </Footer>
+        </Right>
+      ) : (
+        <SpinnerContainer>
+          <LoadingSpinner />
+        </SpinnerContainer>
+      )}
     </>
   ) : (
-    <div> </div>
+    <div></div>
   )
 })
 export default Transactions
@@ -118,9 +114,18 @@ const TitleContainer = styled.div`
 
 const Right = styled.div`
   width: 45vw;
+  @media (max-width: 1170px) {
+    width: 100%;
+  }
 `
 const Footer = styled.div`
   border-bottom: 1px solid ${p => p.contentBorder};
   height: 50px;
   margin-bottom: 5px;
+`
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45vw;
 `
