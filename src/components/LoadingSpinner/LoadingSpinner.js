@@ -1,7 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import { keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+//  import { keyframes } from 'styled-components'
 import { theme } from '@aragon/ui'
 
 const spin = keyframes`
@@ -17,7 +16,7 @@ const LoadingSpinner = React.memo(function LoadingSpinner({ paused }) {
   return (
     <Span1>
       <Span2>
-        <Span3></Span3>
+        <Span3 />
       </Span2>
     </Span1>
   )

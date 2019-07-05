@@ -5,7 +5,7 @@ import { TableRow, TableCell, Text, Timer, IdentityBadge } from '@aragon/ui'
 import styled from 'styled-components'
 
 const BlockRow = ({ block, smallViewMode }) => {
-  const { state, dispatch, actions } = useContext(StoreContext)
+  const { dispatch } = useContext(StoreContext)
   let [timeStamp, setTimeStamp] = useState()
   const { number, transactions, timestamp, miner } = block
 
@@ -75,6 +75,12 @@ const StyledTableCell = styled(TableCell)`
     }
   }
 `
+const TrxContainer = styled.span`
+  margin-top: 5px;
+`
+const MinerContainer = styled.span`
+  margin-top: 5px;
+`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
@@ -86,19 +92,6 @@ const Grid = styled.div`
     text-align: right;
   }
 `
-const TextOverflow = styled.div`
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`
 const TimerContainer = styled.span`
-  margin-top: 5px;
-`
-
-const MinerContainer = styled.span`
-  margin-top: 5px;
-`
-
-const TrxContainer = styled.span`
   margin-top: 5px;
 `

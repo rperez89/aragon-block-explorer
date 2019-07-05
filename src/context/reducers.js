@@ -12,16 +12,6 @@ const types = {
   SELECT_BLOCK: 'SELECT_BLOCK',
 }
 
-const initBlocks = (blockNumber, web3) => {
-  let ret = []
-  for (let i = 0; i < 10; i++) {
-    web3.eth.getBlock(blockNumber - i, false, (error, result) => {
-      if (!error) ret.push(result)
-    })
-  }
-  return ret
-}
-
 const reducer = (state = initialState, action) => {
   console.log({ oldState: state, type: action.type, payload: action.payload })
   switch (action.type) {

@@ -1,13 +1,6 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { StoreContext } from '../../context/StoreContext'
-import {
-  Button,
-  Table,
-  TableHeader,
-  TableRow,
-  useViewport,
-  theme,
-} from '@aragon/ui'
+import { Table, TableHeader, TableRow, useViewport, theme } from '@aragon/ui'
 import TransactionRow from './TransactionRow'
 import styled from 'styled-components'
 import './styles.css'
@@ -15,7 +8,7 @@ import Pager from '../Pager/Pager'
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 
 const Transactions = React.memo(({ blockNumber }) => {
-  const { state, dispatch, actions } = useContext(StoreContext)
+  const { state } = useContext(StoreContext)
   let [dataFetched, setDataFetched] = useState(false)
   let [transactions, setTransactions] = useState([])
   let [pagesNumber, setPagesNumber] = useState()
@@ -25,14 +18,13 @@ const Transactions = React.memo(({ blockNumber }) => {
   const { contentBorder } = theme
 
   useEffect(() => {
+    async function getBlocks() {
+      let { transactions } = await state.web3.eth.getBlock(blockNumber, true)
+      let filteredTransactions = transactions.filter(({ value }) => value > 0)
+      setTransactions(prev => filteredTransactions)
+      setPagesNumber(number => Math.ceil(filteredTransactions.length / 10))
+    }
     if (blockNumber) {
-      let ret = []
-      async function getBlocks() {
-        let { transactions } = await state.web3.eth.getBlock(blockNumber, true)
-        let filteredTransactions = transactions.filter(({ value }) => value > 0)
-        setTransactions(prev => filteredTransactions)
-        setPagesNumber(number => Math.ceil(filteredTransactions.length / 10))
-      }
       getBlocks()
     }
   }, [blockNumber])
@@ -91,7 +83,7 @@ const Transactions = React.memo(({ blockNumber }) => {
               onPrevious={handleOnPrevious}
               totalPages={pagesNumber}
               currentPage={currentPage}
-            ></Pager>
+            />
           </Footer>
         </Right>
       ) : (
@@ -101,7 +93,7 @@ const Transactions = React.memo(({ blockNumber }) => {
       )}
     </>
   ) : (
-    <div></div>
+    <div />
   )
 })
 export default Transactions

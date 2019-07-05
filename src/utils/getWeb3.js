@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 import provider from './providers'
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { types } from '../context/reducers'
 import { StoreContext } from '../context/StoreContext'
 
@@ -39,7 +39,7 @@ export const getWeb3 = () =>
   })
 
 export function useWeb3() {
-  const { state, dispatch, actions } = useContext(StoreContext)
+  const { dispatch } = useContext(StoreContext)
   async function asyncWeb3() {
     try {
       const web3 = await getWeb3()
@@ -59,6 +59,6 @@ export function useWeb3() {
 
 export function unsubscribeWeb3(subscription) {
   subscription.unsubscribe(function(error, success) {
-    if (success) console.log('Successfully unsubscribed!')
+    if (!error) console.log('Successfully unsubscribed!')
   })
 }

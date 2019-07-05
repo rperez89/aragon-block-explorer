@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
 const Pager = React.memo(({ onNext, onPrevious, totalPages, currentPage }) => {
@@ -8,10 +8,10 @@ const Pager = React.memo(({ onNext, onPrevious, totalPages, currentPage }) => {
   useEffect(() => {
     setNextBlocked(nxt => false)
     setPreviousBlocked(prv => false)
-    if (currentPage == 1) {
+    if (currentPage === 1) {
       setPreviousBlocked(prev => true)
     }
-    if (currentPage == totalPages) {
+    if (currentPage === totalPages) {
       console.log('totaaaaaaal')
       setNextBlocked(nxt => true)
     }

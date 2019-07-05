@@ -1,16 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { StoreContext } from './context/StoreContext'
-import styled, { css } from 'styled-components'
-import { types } from './context/reducers'
+import styled from 'styled-components'
 import { Main, AppView, breakpoint, Viewport } from '@aragon/ui'
 import './App.css'
-import { useWeb3, unsubscribeWeb3 } from './utils/getWeb3'
+import { useWeb3 } from './utils/getWeb3'
 import Blocks from './components/blocks/Blocks'
 import Transactions from './components/transactions/Transactions'
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner'
 
 function App() {
-  const { state, dispatch, actions } = useContext(StoreContext)
+  const { state } = useContext(StoreContext)
 
   useWeb3(() => {}, [])
 
@@ -18,20 +17,19 @@ function App() {
   let [dataFetched, setDataFetched] = useState(false)
 
   useEffect(() => {
-    if (state.blockNumber) {
-      let ret = []
-      async function getBlocks() {
-        for (let i = 0; i < 10; i++) {
-          let block = await state.web3.eth.getBlock(state.blockNumber - i)
-          setBlockList(blockList => [...blockList, block])
-        }
+    async function getBlocks() {
+      for (let i = 0; i < 10; i++) {
+        let block = await state.web3.eth.getBlock(state.blockNumber - i)
+        setBlockList(blockList => [...blockList, block])
       }
+    }
+    if (state.blockNumber) {
       getBlocks()
     }
   }, [state.blockNumber])
 
   useEffect(() => {
-    if (blockList.length == 10) {
+    if (blockList.length === 10) {
       setDataFetched(true)
     }
   }, [blockList])
@@ -47,17 +45,18 @@ function App() {
               error,
               result
             ) {
-              console.log(result)
-              setBlockList(prev => {
-                let ret = prev.slice(0, 9)
-                ret.unshift(result)
-                return ret
-              })
+              if (!error) {
+                setBlockList(prev => {
+                  let ret = prev.slice(0, 9)
+                  ret.unshift(result)
+                  return ret
+                })
+              }
             })
           })
         return () => {
           subscription.unsubscribe(function(error, success) {
-            if (success) console.log('Successfully unsubscribed!')
+            if (!error) console.log('Successfully unsubscribed!')
           })
         }
       }
@@ -70,7 +69,6 @@ function App() {
       <AppView title="Block Explorer">
         <Viewport>
           {({ below }) => {
-            const tabbedNavigation = below('medium')
             const compactTable = below('medium')
             console.log('compactTable', compactTable)
             if (!dataFetched) {
@@ -82,12 +80,10 @@ function App() {
             }
             return (
               <Container id={'container'}>
-                <Left>
-                  {dataFetched && <Blocks blockList={blockList}></Blocks>}
-                </Left>
+                <Left>{dataFetched && <Blocks blockList={blockList} />}</Left>
                 <Separator />
 
-                <Transactions blockNumber={state.selectedBlock}></Transactions>
+                <Transactions blockNumber={state.selectedBlock} />
               </Container>
             )
           }}
@@ -122,13 +118,5 @@ const Left = styled.div`
 `
 const Separator = styled.div`
   width: 5vw;
-`
-const Table1Wrapper = styled.div`
-  flex-shrink: 0;
-  flex-grow: 0;
-`
-
-const StyledMain = styled(Main)`
-  background: linear-gradient(130deg, rgb(0, 180, 230), rgb(0, 240, 224));
 `
 export default App

@@ -1,22 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { StoreContext } from '../../context/StoreContext'
-import { types } from '../../context/reducers'
 import {
   TableRow,
   TableCell,
   Text,
-  Timer,
   IdentityBadge,
   TransactionBadge,
-  TokenBadge,
 } from '@aragon/ui'
 import styled from 'styled-components'
 
 const TransactionRow = ({ transaction, smallViewMode }) => {
   const { state } = useContext(StoreContext)
-  let [timeStamp, setTimeStamp] = useState()
   let [ethValue, setEthValue] = useState()
-  const { hash, timestamp, from, to, value } = transaction
+  const { hash, from, to, value } = transaction
   useEffect(() => {
     setEthValue(() => state.web3.utils.fromWei(value, 'ether'))
   }, [])
@@ -40,10 +36,10 @@ const TransactionRow = ({ transaction, smallViewMode }) => {
               <Text>{ethValue}</Text>
             </ValueContainer>
             <FromContainer>
-              <IdentityBadge entity={from} badgeOnly={true} />
+              <IdentityBadge entity={from} badgeOnly />
             </FromContainer>
             <ToContainer>
-              <IdentityBadge entity={to} badgeOnly={true} />
+              <IdentityBadge entity={to} badgeOnly />
             </ToContainer>
           </Grid>
         </StyledTableCell>
@@ -62,10 +58,10 @@ const TransactionRow = ({ transaction, smallViewMode }) => {
         />
       </TableCell>
       <TableCell>
-        <IdentityBadge entity={from} badgeOnly={true} />
+        <IdentityBadge entity={from} badgeOnly />
       </TableCell>
       <TableCell>
-        <IdentityBadge entity={to} badgeOnly={true} />
+        <IdentityBadge entity={to} badgeOnly />
       </TableCell>
       <TableCell>
         <Text>{ethValue}</Text>
@@ -87,6 +83,14 @@ const StyledTableCell = styled(TableCell)`
     }
   }
 `
+const FromContainer = styled.span`
+  margin-top: 5px;
+`
+
+const ToContainer = styled.span`
+  margin-top: 5px;
+`
+
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
@@ -98,19 +102,6 @@ const Grid = styled.div`
     text-align: right;
   }
 `
-const TextOverflow = styled.div`
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`
 const ValueContainer = styled.span`
-  margin-top: 5px;
-`
-
-const ToContainer = styled.span`
-  margin-top: 5px;
-`
-
-const FromContainer = styled.span`
   margin-top: 5px;
 `

@@ -1,25 +1,11 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react'
-import { StoreContext } from '../../context/StoreContext'
-import { types } from '../../context/reducers'
-import {
-  Button,
-  Table,
-  TableHeader,
-  TableRow,
-  useViewport,
-  theme,
-} from '@aragon/ui'
+import React from 'react'
+import { Table, TableHeader, TableRow, useViewport, theme } from '@aragon/ui'
 import BlockRow from './BlockRow'
-import {
-  CSSTransition,
-  TransitionGroup,
-  Transition,
-} from 'react-transition-group'
 import './styles.css'
 import styled from 'styled-components'
 
 const Blocks = React.memo(({ blockList }) => {
-  const { state, dispatch, actions } = useContext(StoreContext)
+  //  const { state, dispatch, actions } = useContext(StoreContext)
   const { contentBorder } = theme
   const { below } = useViewport()
   const compactMode = below('medium')
@@ -56,7 +42,7 @@ const Blocks = React.memo(({ blockList }) => {
               block={block}
               key={block.hash}
               smallViewMode={compactMode}
-              //dispatch({ type: types.SELECT_BLOCK, payload: block.number })
+              //  dispatch({ type: types.SELECT_BLOCK, payload: block.number })
             />
 
             // </CSSTransition>
