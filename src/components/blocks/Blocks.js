@@ -12,7 +12,7 @@ const Blocks = React.memo(({ blockList }) => {
   return (
     <>
       <TitleContainer contentBorder={contentBorder}>
-        <Title>{'Latest Blocks'}</Title>
+        <Title id={'BlocksTitle'}>{'Latest Blocks'}</Title>
       </TitleContainer>
       <Table
         // style={{ borderTop: `1px solid ${contentBorder}` }}
@@ -42,6 +42,7 @@ const Blocks = React.memo(({ blockList }) => {
               block={block}
               key={block.hash}
               smallViewMode={compactMode}
+              rowId={`blockrow${index}`}
               //  dispatch({ type: types.SELECT_BLOCK, payload: block.number })
             />
 

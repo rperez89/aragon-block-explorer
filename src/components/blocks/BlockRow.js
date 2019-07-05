@@ -4,7 +4,7 @@ import { types } from '../../context/reducers'
 import { TableRow, TableCell, Text, Timer, IdentityBadge } from '@aragon/ui'
 import styled from 'styled-components'
 
-const BlockRow = ({ block, smallViewMode }) => {
+const BlockRow = ({ block, smallViewMode, rowId }) => {
   const { dispatch } = useContext(StoreContext)
   let [timeStamp, setTimeStamp] = useState()
   const { number, transactions, timestamp, miner } = block
@@ -15,7 +15,7 @@ const BlockRow = ({ block, smallViewMode }) => {
 
   if (smallViewMode) {
     return (
-      <TableRow>
+      <TableRow id={rowId}>
         <StyledTableCell>
           <Grid>
             <div css="overflow: hidden; margin-top: 5px">
@@ -40,12 +40,13 @@ const BlockRow = ({ block, smallViewMode }) => {
 
   return (
     <TableRow
+      id={rowId}
       onClick={() => {
         dispatch({ type: types.SELECT_BLOCK, payload: block.number })
       }}
     >
       <TableCell>
-        <Text>{number}</Text>
+        <Text id={`blockNumber${rowId}`}>{number}</Text>
       </TableCell>
       <TableCell>
         <Text>{transactions && transactions.length}</Text>

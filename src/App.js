@@ -80,7 +80,9 @@ function App() {
             }
             return (
               <Container id={'container'}>
-                <Left>{dataFetched && <Blocks blockList={blockList} />}</Left>
+                <Left id={'BlocksContainer'}>
+                  {dataFetched && <Blocks blockList={blockList} />}
+                </Left>
                 <Separator />
 
                 <Transactions blockNumber={state.selectedBlock} />

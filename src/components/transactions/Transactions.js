@@ -48,7 +48,9 @@ const Transactions = React.memo(({ blockNumber }) => {
       {dataFetched ? (
         <Right>
           <TitleContainer contentBorder={contentBorder}>
-            <Title>{`Transactions From Block: ${blockNumber}`}</Title>
+            <Title
+              id={'TransactionTitle'}
+            >{`Transactions From Block: ${blockNumber}`}</Title>
           </TitleContainer>
           <Table
             header={
