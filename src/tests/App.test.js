@@ -15,12 +15,16 @@ describe('Apps test ', () => {
   beforeAll(async () => {
     browser = await dappeteer.launch(puppeteer, {
       headless: false,
-      args: ['--start-maximized'],
+      args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox'],
     })
-    metamask = await dappeteer.getMetamask(browser)
+
     page = await browser.newPage()
+
     await page.setViewport({ width: 1800, height: 768 })
     await page.goto('http://localhost:3000/')
+    metamask = await dappeteer.getMetamask(browser)
+    metamask.switchNetwork('main')
+    metamask.approve()
   })
 
   it('renders blocks section', async () => {
