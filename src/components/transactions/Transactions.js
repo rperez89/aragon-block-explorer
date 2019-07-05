@@ -20,7 +20,8 @@ const Transactions = React.memo(({ blockNumber }) => {
   let [transactions, setTransactions] = useState([])
   let [pagesNumber, setPagesNumber] = useState()
   let [currentPage, setCurrentPage] = useState(1)
-  //let [dataFetched, setDataFetched] = useState(false)
+  const { below } = useViewport()
+  const compactMode = below('medium')
   const { contentBorder } = theme
 
   useEffect(() => {
@@ -59,12 +60,14 @@ const Transactions = React.memo(({ blockNumber }) => {
           </TitleContainer>
           <Table
             header={
-              <TableRow>
-                <TableHeader title="Hash" css="width: 20%" />
-                <TableHeader title="From" css="width: 20%" />
-                <TableHeader title="To" css="width: 20%" />
-                <TableHeader title="Value (Eth)" css="width: 20%" />
-              </TableRow>
+              !compactMode && (
+                <TableRow>
+                  <TableHeader title="Hash" css="width: 20%" />
+                  <TableHeader title="From" css="width: 20%" />
+                  <TableHeader title="To" css="width: 20%" />
+                  <TableHeader title="Value (Eth)" css="width: 20%" />
+                </TableRow>
+              )
             }
             css={`
               color: ${theme.textPrimary};
@@ -75,7 +78,11 @@ const Transactions = React.memo(({ blockNumber }) => {
               transactions
                 .slice(currentPage * 10 - 10, currentPage * 10)
                 .map((trx, index) => (
-                  <TransactionRow transaction={trx} key={trx.hash} />
+                  <TransactionRow
+                    transaction={trx}
+                    key={trx.hash}
+                    smallViewMode={compactMode}
+                  />
                 ))}
           </Table>
           <Footer contentBorder={contentBorder}>

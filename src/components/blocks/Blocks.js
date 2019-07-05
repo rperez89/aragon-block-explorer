@@ -23,7 +23,6 @@ const Blocks = React.memo(({ blockList }) => {
   const { contentBorder } = theme
   const { below } = useViewport()
   const compactMode = below('medium')
-  console.log('belowwww ', compactMode)
   return (
     <>
       <TitleContainer contentBorder={contentBorder}>
