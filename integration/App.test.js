@@ -20,7 +20,7 @@ describe('Apps test ', () => {
     metamask = await dappeteer.getMetamask(browser)
     metamask.switchNetwork('main')
     page = await browser.newPage()
-
+    console.log('hello')
     await page.setViewport({ width: 1800, height: 768 })
     await page.goto('http://localhost:3000/')
 
