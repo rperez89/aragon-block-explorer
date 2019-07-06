@@ -92,7 +92,7 @@
     "start:rinkeby": "cross-env REACT_APP_ETH_NETWORK_TYPE=rinkeby npm start",
     "build": "node scripts/build.js",
     "test": "percy exec -- node scripts/test.js",
-    "test:integration": "jest -c integration/jest.config.js",
+    "test:integration": "percy exec -- jest -c integration/jest.config.js",
     "snapshot": "build-storybook -s public && percy-storybook --widths=320,1280"
   },
   "eslintConfig": {
