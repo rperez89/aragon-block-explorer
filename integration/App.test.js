@@ -10,6 +10,7 @@ describe('Apps test ', () => {
   let browser
   let metamask
   let page
+  let server
 
   beforeAll(async () => {
     browser = await dappeteer.launch(puppeteer, {
@@ -23,7 +24,9 @@ describe('Apps test ', () => {
     await page.setViewport({ width: 1800, height: 768 })
     await page.goto('http://localhost:3000/')
 
-    metamask.approve()
+    await metamask.approve()
+    await page.bringToFront()
+    await page.reload()
   })
 
   it('renders blocks section', async () => {
