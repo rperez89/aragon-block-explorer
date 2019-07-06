@@ -1,10 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from '../App'
-import { exportAllDeclaration } from '@babel/types'
+const WebpackDevServer = require('webpack-dev-server')
 const puppeteer = require('puppeteer')
 const dappeteer = require('dappeteer')
 const { percySnapshot } = require('@percy/puppeteer')
+const execa = require('execa')
 
 jest.setTimeout(60000)
 
@@ -12,18 +10,19 @@ describe('Apps test ', () => {
   let browser
   let metamask
   let page
+
   beforeAll(async () => {
     browser = await dappeteer.launch(puppeteer, {
       headless: false,
       args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox'],
     })
-
+    metamask = await dappeteer.getMetamask(browser)
+    metamask.switchNetwork('main')
     page = await browser.newPage()
 
     await page.setViewport({ width: 1800, height: 768 })
     await page.goto('http://localhost:3000/')
-    metamask = await dappeteer.getMetamask(browser)
-    metamask.switchNetwork('main')
+
     metamask.approve()
   })
 

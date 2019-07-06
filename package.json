@@ -31,7 +31,6 @@
     "html-webpack-plugin": "4.0.0-beta.5",
     "identity-obj-proxy": "3.0.0",
     "is-wsl": "^1.1.0",
-    "jest": "24.7.1",
     "jest-environment-jsdom-fourteen": "0.1.0",
     "jest-resolve": "24.7.1",
     "jest-watch-typeahead": "0.3.0",
@@ -66,9 +65,9 @@
     "@babel/core": "^7.5.0",
     "@percy/agent": "0.8.3",
     "@percy/puppeteer": "^1.0.8",
-    "dappeteer": "=0.6.0",
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
+    "dappeteer": "=0.6.0",
     "eslint": "^5.6.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-config-standard": "^12.0.0",
@@ -79,8 +78,13 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.5.1",
     "eslint-plugin-standard": "^4.0.0",
+    "execa": "2.0.3",
+    "http-server": "^0.11.1",
+    "jest": "^24.7.1",
+    "jest-puppeteer": "^4.2.0",
     "parcel-bundler": "^1.10.1",
-    "prettier": "^1.11.1"
+    "prettier": "^1.11.1",
+    "puppeteer": "^1.18.1"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -88,60 +92,23 @@
     "start:rinkeby": "cross-env REACT_APP_ETH_NETWORK_TYPE=rinkeby npm start",
     "build": "node scripts/build.js",
     "test": "percy exec -- node scripts/test.js",
+    "test:integration": "jest -c integration/jest.config.js",
     "snapshot": "build-storybook -s public && percy-storybook --widths=320,1280"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
     ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
     ]
   },
   "babel": {
