@@ -1,12 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { StoreContext } from './context/StoreContext'
 import styled from 'styled-components'
-import { Main, AppView, breakpoint, Viewport } from '@aragon/ui'
+import { Main, AppView, breakpoint, Viewport, AppBar } from '@aragon/ui'
 import './App.css'
 import { useWeb3 } from './utils/getWeb3'
 import Blocks from './components/blocks/Blocks'
 import Transactions from './components/transactions/Transactions'
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner'
+import Logo from './components/Icon/Logo'
 
 function App() {
   const { state } = useContext(StoreContext)
@@ -66,7 +67,7 @@ function App() {
   console.log('SELECTED ', state.selectedBlock)
   return (
     <Main>
-      <AppView title="Block Explorer">
+      <AppView appBar={<AppBar title="Block Explorer" endContent={<Logo />} />}>
         <Viewport>
           {({ below }) => {
             const compactTable = below('medium')

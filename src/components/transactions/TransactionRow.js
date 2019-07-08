@@ -5,18 +5,59 @@ import {
   TableCell,
   Text,
   IdentityBadge,
-  TransactionBadge,
+  Modal,
+  theme,
 } from '@aragon/ui'
 import styled from 'styled-components'
+import TransactionBadge from '../TransactionBadge/TransactionBadge'
 
 const TransactionRow = ({ transaction, smallViewMode }) => {
   const { state } = useContext(StoreContext)
+  const [opened, setOpened] = useState(false)
   let [ethValue, setEthValue] = useState()
-  const { hash, from, to, value } = transaction
+  const { hash, from, to, value, blockNumber, gas } = transaction
+  console.log('transaction', transaction)
   useEffect(() => {
     setEthValue(() => state.web3.utils.fromWei(value, 'ether'))
   }, [])
 
+  const getModal = () => {
+    return (
+      <Modal visible={opened} onClose={() => setOpened(false)} width={'850px'}>
+        <Part>
+          <Title>Transaction Info</Title>
+
+          <ul>
+            <InfoRow>
+              <span>Block Hash</span>
+              <span>:</span>
+              <strong>{hash}</strong>
+            </InfoRow>
+            <InfoRow>
+              <span>From</span>
+              <span>:</span>
+              <strong>{from}</strong>
+            </InfoRow>
+            <InfoRow>
+              <span>To</span>
+              <span>:</span>
+              <strong>{to}</strong>
+            </InfoRow>
+            <InfoRow>
+              <span>Block Number</span>
+              <span>:</span>
+              <strong>{blockNumber}</strong>
+            </InfoRow>
+            <InfoRow>
+              <span>Gas</span>
+              <span>:</span>
+              <strong>{gas}</strong>
+            </InfoRow>
+          </ul>
+        </Part>
+      </Modal>
+    )
+  }
   if (smallViewMode) {
     return (
       <TableRow>
@@ -24,12 +65,7 @@ const TransactionRow = ({ transaction, smallViewMode }) => {
           <Grid>
             <div css="overflow: hidden; margin-top: 5px">
               <div css="display: flex">
-                <TransactionBadge
-                  transaction={hash}
-                  onClick={() => {
-                    console.log('hello')
-                  }}
-                />
+                <TransactionBadge hash={hash} onClick={() => setOpened(true)} />
               </div>
             </div>
             <ValueContainer>
@@ -43,6 +79,7 @@ const TransactionRow = ({ transaction, smallViewMode }) => {
             </ToContainer>
           </Grid>
         </StyledTableCell>
+        {getModal()}
       </TableRow>
     )
   }
@@ -50,12 +87,7 @@ const TransactionRow = ({ transaction, smallViewMode }) => {
   return (
     <TableRow>
       <TableCell>
-        <TransactionBadge
-          transaction={hash}
-          onClick={() => {
-            console.log('hello')
-          }}
-        />
+        <TransactionBadge hash={hash} onClick={() => setOpened(true)} />
       </TableCell>
       <TableCell>
         <IdentityBadge entity={from} badgeOnly />
@@ -66,6 +98,7 @@ const TransactionRow = ({ transaction, smallViewMode }) => {
       <TableCell>
         <Text>{ethValue}</Text>
       </TableCell>
+      {getModal()}
     </TableRow>
   )
 }
@@ -104,4 +137,37 @@ const Grid = styled.div`
 `
 const ValueContainer = styled.span`
   margin-top: 5px;
+`
+const InfoRow = styled.li`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  list-style: none;
+
+  > span:nth-child(1) {
+    font-weight: 400;
+    color: ${theme.textSecondary};
+  }
+  > span:nth-child(2) {
+    opacity: 0;
+    width: 10px;
+  }
+  > span:nth-child(3) {
+    flex-shrink: 1;
+  }
+  > strong {
+    text-transform: uppercase;
+  }
+`
+const Part = styled.section`
+  margin-bottom: 55px;
+`
+const Title = styled.h1`
+  margin-bottom: 15px;
+  text-transform: lowercase;
+  line-height: 30px;
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: 16px;
+  border-bottom: 1px solid ${theme.contentBorder};
 `
