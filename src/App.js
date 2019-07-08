@@ -69,7 +69,6 @@ function App() {
       <AppView appBar={<AppBar title="Block Explorer" endContent={<Logo />} />}>
         <Viewport>
           {({ below }) => {
-            const compactTable = below('medium')
             if (!dataFetched) {
               return (
                 <SpinnerContainer>

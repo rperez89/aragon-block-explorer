@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Text } from '@aragon/ui'
 import styled from 'styled-components'
 import { shortenAddress } from '../../utils/getWeb3'
