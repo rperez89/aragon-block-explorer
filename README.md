@@ -47,3 +47,7 @@ npm run test:integration
 ```
 
 If no Percy token was found the visual changes check will be sikped.
+
+## TODO
+
+Create a fade in effect for incoming blocks
