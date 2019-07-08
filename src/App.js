@@ -64,14 +64,12 @@ function App() {
     }
   }, [dataFetched])
 
-  console.log('SELECTED ', state.selectedBlock)
   return (
     <Main>
       <AppView appBar={<AppBar title="Block Explorer" endContent={<Logo />} />}>
         <Viewport>
           {({ below }) => {
             const compactTable = below('medium')
-            console.log('compactTable', compactTable)
             if (!dataFetched) {
               return (
                 <SpinnerContainer>

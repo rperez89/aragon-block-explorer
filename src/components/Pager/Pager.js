@@ -12,12 +12,10 @@ const Pager = React.memo(({ onNext, onPrevious, totalPages, currentPage }) => {
       setPreviousBlocked(prev => true)
     }
     if (currentPage === totalPages) {
-      console.log('totaaaaaaal')
       setNextBlocked(nxt => true)
     }
   }, [currentPage, totalPages])
 
-  console.log('nextBlocked ', nextBlocked)
   return (
     <>
       <List>

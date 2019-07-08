@@ -4,9 +4,6 @@ import styled from 'styled-components'
 import { shortenAddress } from '../../utils/getWeb3'
 
 const TransactionBadge = ({ hash, onClick }) => {
-  useEffect(() => {}, [])
-
-  console.log('the hash: ', hash)
   return (
     <Main onClick={onClick}>
       <Label size={'normal'}>{shortenAddress(hash)}</Label>

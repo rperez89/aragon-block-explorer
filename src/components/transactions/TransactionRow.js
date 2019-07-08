@@ -16,7 +16,6 @@ const TransactionRow = ({ transaction, smallViewMode }) => {
   const [opened, setOpened] = useState(false)
   let [ethValue, setEthValue] = useState()
   const { hash, from, to, value, blockNumber, gas } = transaction
-  console.log('transaction', transaction)
   useEffect(() => {
     setEthValue(() => state.web3.utils.fromWei(value, 'ether'))
   }, [])
