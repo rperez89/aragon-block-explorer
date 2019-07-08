@@ -3,5 +3,5 @@
 ## Overview
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/rperez89/aragon-block-explorer/master/docs/resources/blockExp.png" width="600" />
+    <img src="https://raw.githubusercontent.com/rperez89/aragon-block-explorer/master/docs/resources/blockExp.png" />
 </p>
