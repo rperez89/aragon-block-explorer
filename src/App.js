@@ -47,11 +47,15 @@ function App() {
               result
             ) {
               if (!error) {
-                setBlockList(prev => {
-                  let ret = prev.slice(0, 9)
-                  ret.unshift(result)
-                  return ret
-                })
+                if (
+                  !blockList.find(block => block.number === blockHeader.number)
+                ) {
+                  setBlockList(prev => {
+                    let ret = prev.slice(0, 9)
+                    ret.unshift(result)
+                    return ret
+                  })
+                }
               }
             })
           })
