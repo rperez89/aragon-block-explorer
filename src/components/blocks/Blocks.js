@@ -5,7 +5,6 @@ import './styles.css'
 import styled from 'styled-components'
 
 const Blocks = React.memo(({ blockList }) => {
-  //  const { state, dispatch, actions } = useContext(StoreContext)
   const { contentBorder } = theme
   const { below } = useViewport()
   const compactMode = below('medium')
@@ -15,7 +14,6 @@ const Blocks = React.memo(({ blockList }) => {
         <Title id={'BlocksTitle'}>{'Latest Blocks'}</Title>
       </TitleContainer>
       <Table
-        // style={{ borderTop: `1px solid ${contentBorder}` }}
         compactMode={compactMode}
         header={
           !compactMode && (
@@ -35,20 +33,13 @@ const Blocks = React.memo(({ blockList }) => {
         {/* <TransitionGroup exit={false}> */}
         {blockList &&
           blockList.map((block, index) => (
-            // const { number, timestamp } = block //destructuring
-            // <CSSTransition key={block.hash} timeout={300} classNames="item">
-
             <BlockRow
               block={block}
               key={block.hash}
               smallViewMode={compactMode}
               rowId={`blockrow${index}`}
-              //  dispatch({ type: types.SELECT_BLOCK, payload: block.number })
             />
-
-            // </CSSTransition>
           ))}
-        {/* </TransitionGroup> */}
       </Table>
       <Footer contentBorder={contentBorder} />
     </>

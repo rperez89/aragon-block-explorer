@@ -14,6 +14,7 @@ const BlockRow = ({ block, smallViewMode, rowId }) => {
   }, [])
 
   if (smallViewMode) {
+    console.log('miner :', miner)
     return (
       <TableRow id={rowId}>
         <StyledTableCell>
