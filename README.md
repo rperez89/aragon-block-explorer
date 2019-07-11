@@ -13,6 +13,10 @@ Aragon-Block-Explorer is a small app to explore the latest blocks on Ethereum. T
 ### Quick setup
 
 ```
+Tested with node version 10.16.0
+```
+
+```
 npm install
 ```
 
