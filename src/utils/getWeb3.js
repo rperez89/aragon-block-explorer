@@ -1,11 +1,11 @@
 import Web3 from 'web3'
-import provider from './providers'
+import providers from './providers'
 import { useContext, useEffect } from 'react'
 import { types } from '../context/reducers'
 import { StoreContext } from '../context/StoreContext'
 
 const getProvider = () => {
-  return provider[process.env.REACT_APP_ETH_NETWORK_TYPE]
+  return providers(process.env.REACT_APP_ETH_NETWORK_TYPE)
 }
 
 export const getWeb3 = () =>
@@ -31,7 +31,7 @@ export const getWeb3 = () =>
         console.log('Injected web3 detected.')
         resolve(web3)
       } else {
-        const web3 = new Web3(getProvider)
+        const web3 = new Web3(getProvider())
         console.log('No web3 instance injected, using Local web3.')
         resolve(web3)
       }
